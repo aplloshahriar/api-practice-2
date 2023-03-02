@@ -113,6 +113,12 @@ const displayPhoneDetails=phone=>{
     console.log(phone);
     const modalTitle=document.getElementById('phonemodalLabel');
     modalTitle.innerText=phone.name;
+    
+    const phoneDetails=document.getElementById('phone-details');
+    phoneDetails.innerHTML=`
+        <p>Release Date: ${phone.releaseDate}</p>
+        <p>Release Date: ${phone.mainFeatures.storage}</p>
+    `;
 
 }
 loadPhones('apple');
