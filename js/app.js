@@ -1,19 +1,18 @@
-const loadPhones=async(searchText)=>{
+const loadPhones=async(searchText, dataLimit)=>{
     const url=`https://openapi.programming-hero.com/api/phones?search=${searchText}`;
     const res=await fetch(url);
     const data=await res.json();
-    displayPhones(data.data);
+    displayPhones(data.data,dataLimit);
 
 }
-const displayPhones=phones=>{
+const displayPhones=(phones,dataLimit)=>{
     // console.log(phones);
     const phonesContainer= document.getElementById('phone-container');
     // clear before search
     phonesContainer.textContent='';  
-
     // display 10 phone only
     const showAll=document.getElementById('show-all');
-    if(phones.length>10){
+    if(dataLimit &&  phones.length>10){
 
         phones=phones.slice(0,10);
         
@@ -32,6 +31,8 @@ const displayPhones=phones=>{
     else{
         noPhone.classList.add('d-none');
     }
+
+
     // display all phones
     phones.forEach(phone=>{
         const phoneDiv=document.createElement('div');
@@ -42,7 +43,8 @@ const displayPhones=phones=>{
                 <div class="card-body">
                   <h5 class="card-title">${phone.phone_name}</h5>
                   <p class="card-text">This is a longer card with supporting         
-text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+text below as a natural lead-in to additional content. This content is a little bit longer.</p> 
+                <button onclick="loadPhoneDetails('${phone.slug}')" href="#" class="btn btn-primary">Show DEtails</button>
                 </div>
               </div>
 `;
@@ -53,18 +55,31 @@ text below as a natural lead-in to additional content. This content is a little 
     toggleSpinner(false);
 }
 
-
+const searchProcess=(dataLimit)=>{
+    toggleSpinner(true);
+    const searchField=document.getElementById('search-field');
+    const searchText=searchField.value ;
+    loadPhones(searchText,dataLimit);
+}
 
 // handle search button
 document.getElementById('btn-search').addEventListener('click',function(){
     // start loader
-    toggleSpinner(true);
-    const searchField=document.getElementById('search-field');
-    const searchText=searchField.value ;
-    loadPhones(searchText);
+    // toggleSpinner(true);
+    // const searchField=document.getElementById('search-field');
+    // const searchText=searchField.value ;
+    // loadPhones(searchText);
+    searchProcess(10);
 
 })
-// loadPhones();
+
+// enter key handler
+document.getElementById('search-field').addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') {
+        searchProcess(10);
+    }
+});
+
 
 const toggleSpinner=isLoading=>{
     const loaderSection=document.getElementById('loader');
@@ -76,3 +91,19 @@ const toggleSpinner=isLoading=>{
     }
    
 }
+
+document.getElementById('btn-showAll').addEventListener('click',function(){
+    // toggleSpinner(true);
+    // const searchField=document.getElementById('search-field');
+    // const searchText=searchField.value ;
+    // loadPhones(searchText);
+    searchProcess();
+})
+
+const loadPhoneDetails=async id=>{
+    const url=`https://openapi.programming-hero.com/api/phone/${id}`;
+    const res=await fetch(url);
+    const data= await res.json();
+    console.log(data.data);
+}
+// loadPhones();
