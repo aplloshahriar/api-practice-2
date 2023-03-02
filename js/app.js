@@ -1,5 +1,5 @@
-const loadPhones=async()=>{
-    const url=`https://openapi.programming-hero.com/api/phones?search=iphone`;
+const loadPhones=async(searchText)=>{
+    const url=`https://openapi.programming-hero.com/api/phones?search=${searchText}`;
     const res=await fetch(url);
     const data=await res.json();
     displayPhones(data.data);
@@ -8,6 +8,21 @@ const loadPhones=async()=>{
 const displayPhones=phones=>{
     // console.log(phones);
     const phonesContainer= document.getElementById('phone-container');
+    // clear before search
+    phonesContainer.textContent='';  
+
+    // display 20 phone only
+    phones=phones.slice(0,10);
+
+    // display no phone found
+    const noPhone=document.getElementById('no-phone-found');
+    if(phones.length===0){
+        noPhone.classList.remove('d-none')
+    }
+    else{
+        noPhone.classList.add('d-none');
+    }
+    // display all phones
     phones.forEach(phone=>{
         const phoneDiv=document.createElement('div');
         phoneDiv.classList.add('col');
@@ -25,4 +40,12 @@ text below as a natural lead-in to additional content. This content is a little 
     phonesContainer.appendChild(phoneDiv);
     });
 }
-loadPhones();
+
+
+document.getElementById('btn-search').addEventListener('click',function(){
+    const searchField=document.getElementById('search-field');
+    const searchText=searchField.value ;
+    loadPhones(searchText);
+
+})
+// loadPhones();
