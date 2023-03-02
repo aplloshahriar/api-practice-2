@@ -11,8 +11,18 @@ const displayPhones=phones=>{
     // clear before search
     phonesContainer.textContent='';  
 
-    // display 20 phone only
-    phones=phones.slice(0,10);
+    // display 10 phone only
+    const showAll=document.getElementById('show-all');
+    if(phones.length>10){
+
+        phones=phones.slice(0,10);
+        
+        showAll.classList.remove('d-none');
+    }
+    else{
+        showAll.classList.add('d-none');
+    }
+
 
     // display no phone found
     const noPhone=document.getElementById('no-phone-found');
@@ -39,13 +49,30 @@ text below as a natural lead-in to additional content. This content is a little 
 
     phonesContainer.appendChild(phoneDiv);
     });
+    // stop spinner
+    toggleSpinner(false);
 }
 
 
+
+// handle search button
 document.getElementById('btn-search').addEventListener('click',function(){
+    // start loader
+    toggleSpinner(true);
     const searchField=document.getElementById('search-field');
     const searchText=searchField.value ;
     loadPhones(searchText);
 
 })
 // loadPhones();
+
+const toggleSpinner=isLoading=>{
+    const loaderSection=document.getElementById('loader');
+    if(isLoading){
+        loaderSection.classList.remove('d-none');
+    }
+    else{
+        loaderSection.classList.add('d-none');
+    }
+   
+}
